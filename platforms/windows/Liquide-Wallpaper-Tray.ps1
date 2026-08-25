@@ -2,7 +2,9 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $ErrorActionPreference = "Stop"
-$SettingsPath = Join-Path (Split-Path -Parent $PSScriptRoot) "..\..\liquide-wallpaper-settings.json"
+$PackagedSettingsPath = Join-Path $PSScriptRoot "liquide-wallpaper-settings.json"
+$SourceSettingsPath = Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) "liquide-wallpaper-settings.json"
+$SettingsPath = if (Test-Path -LiteralPath $PackagedSettingsPath) { $PackagedSettingsPath } else { $SourceSettingsPath }
 
 function Get-Defaults {
     [pscustomobject]@{
