@@ -1,0 +1,14 @@
+{
+  "AppVersion": "2.2.0.0",
+  "Title": "Liquide-Wallpaper",
+  "Thumbnail": "assets/windows-brand.png",
+  "Preview": null,
+  "Desc": "Marbre graphite stratifié avec nappes fumées, filons et inclusions minérales contrastées, animé sur deux écrans.",
+  "Author": null,
+  "License": null,
+  "Contact": null,
+  "Type": 1,
+  "FileName": "index.html",
+  "Arguments": "--pause-event true",
+  "IsAbsolutePath": false
+}

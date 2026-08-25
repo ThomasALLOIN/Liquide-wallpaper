@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Liquide-Wallpaper</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <canvas id="wallpaper" aria-label="Marbre monochrome dynamique suivant l’heure locale"></canvas>
+
+    <button
+      id="settings-toggle"
+      class="settings-toggle"
+      type="button"
+      aria-controls="settings-panel"
+      aria-expanded="false"
+      title="Ouvrir les réglages"
+    >
+      <span aria-hidden="true">☰</span>
+      <span class="visually-hidden">Ouvrir les réglages</span>
+    </button>
+
+    <aside id="settings-panel" class="settings-panel" aria-label="Réglages du marbre" hidden>
+      <header>
+        <div>
+          <strong>Marbre</strong>
+          <span>Réglages en direct</span>
+        </div>
+        <button id="settings-close" type="button" aria-label="Fermer les réglages">×</button>
+      </header>
+
+      <div class="control-list">
+        <label class="range-control">
+          <span>Vitesse des veines <output data-output="flowSpeed">16</output></span>
+          <input
+            data-setting="flowSpeed"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="16"
+            title="Vitesse commune du déplacement et de la déformation"
+          />
+        </label>
+        <label class="range-control">
+          <span>Intensité <output data-output="intensity">32</output></span>
+          <input data-setting="intensity" type="range" min="0" max="100" step="1" value="32" />
+        </label>
+        <label class="range-control">
+          <span>Déformation <output data-output="distortion">46</output></span>
+          <input data-setting="distortion" type="range" min="0" max="100" step="1" value="46" />
+        </label>
+        <label class="range-control">
+          <span>Contraste <output data-output="contrast">72</output></span>
+          <input data-setting="contrast" type="range" min="0" max="100" step="1" value="72" />
+        </label>
+        <label class="range-control">
+          <span>Grain et paillettes <output data-output="surfaceGrain">22</output></span>
+          <input data-setting="surfaceGrain" type="range" min="0" max="100" step="1" value="22" />
+        </label>
+      </div>
+
+      <fieldset class="color-controls">
+        <legend>Couleurs</legend>
+        <label>Clair jour <input data-setting="dayBaseColor" type="color" value="#e7e5df" /></label>
+        <label>Sombre jour <input data-setting="dayVeinColor" type="color" value="#181a1d" /></label>
+        <label>Fond nuit <input data-setting="nightBaseColor" type="color" value="#08090b" /></label>
+        <label>Marbre nuit <input data-setting="nightVeinColor" type="color" value="#7c7d80" /></label>
+      </fieldset>
+
+      <div class="seed-control">
+        <label for="random-seed">Seed</label>
+        <input id="random-seed" data-setting="randomSeed" type="number" min="1" max="999999" step="1" value="9287" />
+        <button id="randomize-seed" type="button">Aléatoire</button>
+      </div>
+    </aside>
+
+    <aside id="debug" class="debug" hidden>
+      <strong>Aperçu développeur</strong>
+      <span id="debug-hour"></span>
+      <span>Ajoute <code>?hour=20</code> à l’URL pour simuler la transition.</span>
+    </aside>
+
+    <aside id="render-error" class="render-error" hidden></aside>
+
+    <noscript>JavaScript doit être activé pour afficher ce fond d’écran.</noscript>
+    <script src="src/layout.js"></script>
+    <script src="src/marble-config.js"></script>
+    <script src="src/app.js?v=20260812t"></script>
+  </body>
+</html>
