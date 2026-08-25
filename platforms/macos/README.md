@@ -12,7 +12,7 @@ Liquide-Wallpaper-macOS.zip
 Liquide-Wallpaper-macOS.dmg
 ```
 
-Double-cliquer sur le fichier `.app`. Un petit bouton apparaît en haut à gauche du fond et ouvre directement les réglages. Une icône demi-cercle reste disponible dans la barre de menus macOS pour ouvrir les réglages, replacer l’animation derrière le Bureau et quitter l’application.
+Double-cliquer sur le fichier `.app`. Le fond s’affiche sans bouton, menu ni icône dans la barre des menus. La seed est renouvelée automatiquement toutes les deux heures.
 
 L’application est signée localement de façon ad hoc. Sur un autre Mac, macOS peut demander une première ouverture par clic droit → **Ouvrir**, ou via **Réglages Système → Confidentialité et sécurité → Ouvrir quand même**. Une diffusion publique sans avertissement nécessiterait une signature Developer ID et une notarisation Apple.
 
@@ -34,7 +34,8 @@ Ou double-cliquer sur `Construire-macOS.command`. Le petit hôte Objective-C/App
 - taille logique fixe de 1470 × 956, le facteur Retina étant géré par le canvas ;
 - fenêtre sans bordure placée juste sous les icônes du Bureau ;
 - présence dans tous les Espaces ;
-- menu Web discret ancré à gauche, accessible depuis un petit lanceur natif ou depuis l’icône de barre de menus ;
+- aucun menu, bouton ou élément dans la barre de menus ;
+- seed aléatoire renouvelée toutes les deux heures et conservée pendant la tranche en cours ;
 - aucune connexion réseau.
 
 Cette méthode est un hôte de fond d’écran applicatif. macOS ne fournit pas de format public équivalent à Lively pour exécuter directement un shader interactif comme fond système.

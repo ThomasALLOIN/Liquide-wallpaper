@@ -7,13 +7,10 @@
   const debugPanel = document.getElementById("debug");
   const debugHour = document.getElementById("debug-hour");
   const errorPanel = document.getElementById("render-error");
-  const settingsToggle = document.getElementById("settings-toggle");
-  const settingsPanel = document.getElementById("settings-panel");
-  const settingsClose = document.getElementById("settings-close");
-  const randomizeSeedButton = document.getElementById("randomize-seed");
   const query = new URLSearchParams(window.location.search);
   const hostConfig = window.WallpaperHostConfig || {};
-  const STORAGE_KEY = "fond-marbre-monochrome-settings-v2";
+  const SEED_ROTATION_MS = 2 * 60 * 60 * 1000;
+  const SEED_STORAGE_KEY = "liquide-wallpaper-rotating-seed-v1";
   document.documentElement.dataset.platform = query.get("platform") || hostConfig.platform || "web";
 
   const settings = {
@@ -27,7 +24,7 @@
     distortion: 46,
     surfaceGrain: 22,
     contrast: 72,
-    randomSeed: Number(query.get("seed") || 9287),
+    randomSeed: 9287,
     dayReturn: 7,
     dimmingStart: 18,
     nightStart: 22,
@@ -51,12 +48,9 @@
     startedAt: performance.now(),
     fixedHour: query.has("hour") ? Number(query.get("hour")) : null,
     previewSpeed: Number(query.get("speed") || 0),
+    fixedSeed: query.has("seed"),
+    seedPeriod: null,
   };
-
-  const menuSettingNames = new Set([
-    "flowSpeed", "intensity", "distortion", "contrast", "surfaceGrain", "randomSeed",
-    "dayBaseColor", "dayVeinColor", "nightBaseColor", "nightVeinColor",
-  ]);
 
   function normalizeSeed(value) {
     const numeric = Math.round(Number(value));
@@ -64,50 +58,31 @@
     return Math.min(999999, Math.max(1, numeric));
   }
 
-  function loadSavedSettings() {
+  function generateRandomSeed() {
+    const values = new Uint32Array(1);
+    window.crypto?.getRandomValues?.(values);
+    return 1 + (values[0] || Math.floor(Math.random() * 999999)) % 999999;
+  }
+
+  function updateRotatingSeed(now = Date.now()) {
+    if (runtime.fixedSeed) return false;
+    const period = Math.floor(now / SEED_ROTATION_MS);
+    if (runtime.seedPeriod === period) return false;
+    runtime.seedPeriod = period;
     try {
-      const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "{}");
-      for (const name of menuSettingNames) {
-        if (Object.hasOwn(saved, name)) settings[name] = saved[name];
-      }
+      const saved = JSON.parse(window.localStorage.getItem(SEED_STORAGE_KEY) || "{}");
+      settings.randomSeed = saved.period === period
+        ? normalizeSeed(saved.seed)
+        : generateRandomSeed();
+      window.localStorage.setItem(SEED_STORAGE_KEY, JSON.stringify({ period, seed: settings.randomSeed }));
     } catch (error) {
-      console.warn("Réglages locaux ignorés", error);
+      settings.randomSeed = generateRandomSeed();
+      console.warn("Seed tournante non conservée", error);
     }
-    if (query.has("seed")) settings.randomSeed = Number(query.get("seed"));
-    settings.randomSeed = normalizeSeed(settings.randomSeed);
+    return true;
   }
 
-  function saveSettings() {
-    try {
-      const saved = {};
-      for (const name of menuSettingNames) saved[name] = settings[name];
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-    } catch (error) {
-      console.warn("Réglages locaux non enregistrés", error);
-    }
-  }
-
-  function syncMenuControls() {
-    settingsPanel.querySelectorAll("[data-setting]").forEach((input) => {
-      const name = input.dataset.setting;
-      input.value = String(settings[name]);
-      const output = settingsPanel.querySelector(`[data-output="${name}"]`);
-      if (output) output.value = String(settings[name]);
-    });
-  }
-
-  function setMenuOpen(isOpen) {
-    const wasOpen = !settingsPanel.hidden;
-    settingsPanel.hidden = !isOpen;
-    settingsToggle.setAttribute("aria-expanded", String(isOpen));
-    settingsToggle.setAttribute("aria-label", isOpen ? "Fermer les réglages" : "Ouvrir les réglages");
-    settingsToggle.title = isOpen ? "Fermer les réglages" : "Ouvrir les réglages";
-    if (wasOpen && !isOpen && document.documentElement.dataset.platform === "macos") {
-      window.webkit?.messageHandlers?.wallpaperSettings?.postMessage("closed");
-    }
-  }
-
-  loadSavedSettings();
+  if (runtime.fixedSeed) settings.randomSeed = normalizeSeed(query.get("seed"));
 
   const vertexShaderSource = `#version 300 es
     in vec2 a_position;
@@ -764,6 +739,7 @@
   }
 
   function render(nowMs) {
+    updateRotatingSeed();
     const hour = getHour(nowMs);
     const lightLevel = marble.getLightLevel(hour, settings);
     const screenLayout = layout.resolve(runtime.width, runtime.height, {
@@ -820,14 +796,12 @@
     const numericSettings = new Set([
       "displayLayout", "portraitShare", "landscapeAlignment", "flowSpeed", "intensity", "veinDensity",
       "veinWidth", "distortion", "surfaceGrain", "contrast", "dayReturn", "dimmingStart",
-      "nightStart", "timeOffset", "quality", "frameRate", "randomSeed",
+      "nightStart", "timeOffset", "quality", "frameRate",
     ]);
     const colorSettings = new Set(["dayBaseColor", "dayVeinColor", "nightBaseColor", "nightVeinColor"]);
     if (numericSettings.has(name)) settings[name] = Number(value);
     else if (colorSettings.has(name)) settings[name] = String(value);
-    if (name === "randomSeed") settings.randomSeed = normalizeSeed(settings.randomSeed);
     if (name === "quality") resize();
-    syncMenuControls();
     render(performance.now());
   };
 
@@ -840,15 +814,6 @@
     }
   };
 
-  window.WallpaperController = {
-    openSettings() {
-      setMenuOpen(true);
-    },
-    closeSettings() {
-      setMenuOpen(false);
-    },
-  };
-
   document.addEventListener("visibilitychange", () => {
     runtime.paused = document.hidden;
     runtime.lastMotionUpdate = performance.now();
@@ -859,39 +824,8 @@
     render(performance.now());
   });
 
-  settingsToggle.addEventListener("click", () => {
-    setMenuOpen(settingsPanel.hidden);
-  });
-  settingsClose.addEventListener("click", () => setMenuOpen(false));
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") setMenuOpen(false);
-  });
-
-  settingsPanel.addEventListener("input", (event) => {
-    const input = event.target.closest("[data-setting]");
-    if (!input) return;
-    const name = input.dataset.setting;
-    if (!menuSettingNames.has(name)) return;
-    settings[name] = input.type === "color" ? input.value : Number(input.value);
-    if (name === "randomSeed") settings.randomSeed = normalizeSeed(settings.randomSeed);
-    const output = settingsPanel.querySelector(`[data-output="${name}"]`);
-    if (output) output.value = String(settings[name]);
-    saveSettings();
-    render(performance.now());
-  });
-
-  randomizeSeedButton.addEventListener("click", () => {
-    const randomValues = new Uint32Array(1);
-    window.crypto.getRandomValues(randomValues);
-    settings.randomSeed = 1 + randomValues[0] % 999999;
-    syncMenuControls();
-    saveSettings();
-    render(performance.now());
-  });
-
   debugPanel.hidden = query.get("debug") !== "1";
-  syncMenuControls();
-  setMenuOpen(false);
+  updateRotatingSeed();
   resize();
   render(performance.now());
   window.requestAnimationFrame(frame);

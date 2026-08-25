@@ -35,21 +35,9 @@ test("les métadonnées de compatibilité correspondent au dossier Windows", () 
   assert.deepEqual(rootProperties, windowsProperties);
 });
 
-test("le contrôleur Web permet à l’hôte macOS d’ouvrir le menu", () => {
+test("l’hôte macOS ne présente aucun menu ni lanceur", () => {
   const app = readFileSync(join(root, "src", "app.js"), "utf8");
-  assert.match(app, /window\.WallpaperController/);
-  assert.match(app, /openSettings\(\)/);
-  assert.match(app, /closeSettings\(\)/);
-  assert.match(app, /messageHandlers\?\.wallpaperSettings/);
-  assert.match(macSource, /addScriptMessageHandler:self name:@"wallpaperSettings"/);
-});
-
-test("macOS fournit un petit lanceur gauche sans bloquer les clics du Bureau", () => {
-  assert.match(macSource, /NSPanel \*launcherPanel/);
-  assert.match(macSource, /desktopLauncherLevel/);
-  assert.match(macSource, /return iconLevel \+ 1/);
-  assert.match(macSource, /\[self\.launcherPanel orderOut:nil\]/);
+  assert.doesNotMatch(app, /WallpaperController|openSettings|closeSettings/);
+  assert.doesNotMatch(macSource, /NSStatusItem|NSPanel|wallpaperSettings|openSettings/);
   assert.match(macSource, /self\.window\.ignoresMouseEvents = YES/);
-  assert.match(macSource, /self\.launcherPanel\.ignoresMouseEvents = NO/);
-  assert.match(macSource, /\[self\.launcherPanel orderFrontRegardless\]/);
 });

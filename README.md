@@ -1,6 +1,6 @@
 # Liquide-Wallpaper — Windows et macOS
 
-Fond d’écran procédural de marbre monochrome qui suit silencieusement l’heure locale, sans afficher d’horloge : pierre claire stratifiée le jour, transition progressive en soirée, puis graphite noir et nappes grises la nuit. Les grandes veines, stries et voiles minéraux se déplacent et se déforment lentement sur une phase d’animation commune, avec une vitesse réglable jusqu’à l’arrêt complet. Le rendu WebGL est calculé en temps réel, sans vidéo de 24 heures, réseau ni bibliothèque externe.
+Fond d’écran procédural de marbre monochrome qui suit silencieusement l’heure locale, sans afficher d’horloge ni menu : pierre claire stratifiée le jour, transition progressive en soirée, puis graphite noir et nappes grises la nuit. Les grandes veines, stries et voiles minéraux se déplacent et se déforment lentement. Une seed aléatoire renouvelle la composition toutes les deux heures. Le rendu WebGL est calculé en temps réel, sans vidéo de 24 heures, réseau ni bibliothèque externe.
 
 La matière prend comme référence prioritaire le fond `boo fond terminal.jpg` fourni par l’utilisateur : larges nappes diagonales fumées, haut très sombre, halos poudreux et fines rayures irrégulières. Les filons principaux possèdent un halo, un corps et une âme plus marqués, ouverts et irréguliers, avec une présence renforcée dans la composition verticale. Une seconde couche d’inclusions minérales contrastées ajoute des fragments courts, plus larges et poudreux, sans griffures blanches ni boucles topographiques. L’image et le personnage Boo ne sont pas intégrés au paquet ; le shader recrée uniquement la matière.
 
@@ -19,7 +19,7 @@ Le moteur visuel commun reste à la racine dans `index.html`, `src/` et `assets/
 
 Ouvrir **`Liquide-Wallpaper.app`**. Finder le présente comme un seul fichier, mais il s’agit techniquement d’un bundle d’application contenant l’exécutable natif et les ressources WebGL. Dans macOS, son nom affiché est « Liquide-Wallpaper ».
 
-Pour installer l’application, ouvrir `Liquide-Wallpaper-macOS.dmg`, puis glisser `Liquide-Wallpaper.app` dans le dossier **Applications**. L’archive `Liquide-Wallpaper-macOS.zip` reste disponible pour le transport. Le petit bouton en haut à gauche ouvre directement les réglages. L’icône de barre de menus reste disponible comme accès secondaire pour les réglages, le retour au fond d’écran et la fermeture. Voir `INSTALLATION-macOS.md`.
+Pour installer l’application, ouvrir `Liquide-Wallpaper-macOS.dmg`, puis glisser `Liquide-Wallpaper.app` dans le dossier **Applications**. L’archive `Liquide-Wallpaper-macOS.zip` reste disponible pour le transport. Le fond ne présente aucun bouton ni menu. Voir `INSTALLATION-macOS.md`.
 
 ## Windows
 
@@ -71,7 +71,7 @@ npm run package:macos
 
 ## Architecture
 
-- `index.html`, `src/`, `assets/` : moteur WebGL commun, cycle lumineux et menu repliable ;
+- `index.html`, `src/`, `assets/` : moteur WebGL commun, cycle lumineux et seed tournante ;
 - `platforms/windows/` : métadonnées et packaging Lively ;
 - `platforms/macos/` : hôte AppKit/WebKit, `Info.plist` et construction du `.app` ;
 - `tests/`, `scripts/` : tests, validation et serveur d’aperçu ;

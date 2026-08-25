@@ -8,7 +8,7 @@
 
 - Mission confirmée : créer un fond d’écran dynamique multiplateforme qui suit un cycle jour/nuit pendant toute la journée sans vidéo de 24 heures.
 - Résultat recherché : un même marbre minéral synchronisé avec l’heure locale, livré séparément pour Windows et macOS. Windows conserve la composition double écran avec priorité au vertical droit ; macOS utilise exclusivement une composition paysage 1470 × 956.
-- Critères provisoires de réussite : marbre clair stratifié le jour, assombrissement progressif en fin de journée, graphite presque noir à nappes grises lisibles la nuit, grandes masses diagonales fumées proches de `boo fond terminal.jpg`, quelques filons ouverts nettement marqués avec halo, corps et âme irréguliers, inclusions minérales contrastées courtes et poudreuses, fines rayures non périodiques, seed reproductible, menu repliable discret, rendu Retina/2K/4K, reprise après veille et consommation raisonnable. Aucun personnage, Boo ou objet figuratif ne doit apparaître.
+- Critères provisoires de réussite : marbre clair stratifié le jour, assombrissement progressif en fin de journée, graphite presque noir à nappes grises lisibles la nuit, grandes masses diagonales fumées proches de `boo fond terminal.jpg`, quelques filons ouverts nettement marqués avec halo, corps et âme irréguliers, inclusions minérales contrastées courtes et poudreuses, fines rayures non périodiques, seed aléatoire renouvelée toutes les deux heures, rendu Retina/2K/4K, reprise après veille et consommation raisonnable. Aucun personnage, Boo ou objet figuratif ne doit apparaître.
 
 ## 2. Utilisateurs et besoins
 
@@ -18,7 +18,7 @@
 
 ## 3. Périmètre
 
-- Inclus dans le socle : shader WebGL de marbre graphite stratifié, heure système, palettes jour/nuit, seed reproductible, menu intégré repliable, dispositions Windows Lively par écran ou étendue, hôte macOS AppKit/WebKit paysage 1470 × 956, empaquetage séparé et tests sans dépendance d’exécution.
+- Inclus dans le socle : shader WebGL de marbre graphite stratifié, heure système, palettes jour/nuit, seed aléatoire renouvelée toutes les deux heures, dispositions Windows Lively par écran ou étendue, hôte macOS AppKit/WebKit paysage 1470 × 956, empaquetage séparé et tests sans dépendance d’exécution.
 - Hors périmètre actuel : Linux, déploiement comme site web public, météo en ligne, audio, rendu 3D, installateur Windows `.exe` autonome, notarisation Developer ID et publication dans une galerie ou un App Store.
 - Livrables : moteur web commun, paquet Lively Windows, application `.app` macOS universelle, archives de transport, documentation et contrôles de validation.
 
@@ -62,12 +62,12 @@
 - Les frontières doivent rester irrégulières et localement lisibles, avec un cœur parfois net entouré d’une transition minérale douce ; éviter aussi bien les cassures artificielles que les contours graphiques continus.
 - La couche de détail contrastée doit rester subordonnée aux grandes nappes : fragments courts et ouverts, cœur d’environ 5 à 8 px et gangue poudreuse plus large, extrémités fondues, aucune bifurcation anguleuse, boucle topographique, griffure blanche ou ligne traversant l’écran.
 - La matière doit éviter l’effet zébré régulier : privilégier de grandes zones aléatoires, des nappes remplies plutôt que des boucles de niveau fermées, des stries anisotropes et des variations minérales internes.
-- Le menu intégré doit rester fermé par défaut, ancré en haut à gauche, accessible par un petit bouton discret et permettre de régler intensité, déformation, contraste, grain, quatre couleurs et seed aléatoire. Sur macOS, ce bouton est un petit lanceur natif indépendant afin que le reste du Bureau demeure traversant aux clics.
-- Une même seed et les mêmes réglages doivent reproduire le même motif ; les réglages du menu sont conservés localement sans réseau.
+- Aucun menu, bouton ou lanceur ne doit être visible sur le fond. L’hôte macOS reste intégralement traversant aux clics et ne crée pas d’élément de barre des menus.
+- Une seed aléatoire est générée à chaque tranche de deux heures ; elle est conservée localement pendant la tranche en cours afin de résister à une reprise après veille, sans réseau.
 - Le mode étendu doit accepter une largeur relative et un alignement réglables pour les écrans de résolutions différentes.
 - Le rendu doit se suspendre lorsque la page ou Lively est en pause.
 - Aucun secret, suivi utilisateur ou appel réseau dans le socle.
-- La distribution macOS doit forcer `layout=landscape`, rester fixée à 1470 × 956 points et proposer dans la barre de menus l’accès aux réglages, le retour au Bureau et la fermeture propre.
+- La distribution macOS doit forcer `layout=landscape`, rester fixée à 1470 × 956 points et fonctionner sans menu ni élément visible hors du fond.
 - Acceptation finale : test Windows avec Lively sur les deux écrans physiques et test macOS du `.app` sur l’écran 1470 × 956 par l’utilisateur.
 
 ## 8. Protocole de décision
@@ -75,6 +75,7 @@
 - Les améliorations techniques réversibles et conformes aux priorités peuvent être réalisées sans validation supplémentaire.
 - La direction artistique, le changement de plateforme, l’ajout de services externes et la distribution publique demandent l’accord de l’utilisateur.
 - En cas de conflit : présenter le conflit, ses conséquences et demander l’arbitrage.
+- Toute modification validée du projet doit être commitée puis poussée sur le dépôt distant configuré avant la fin de la tâche, sauf demande explicite contraire de l’utilisateur ou blocage externe signalé.
 
 ## 9. Décisions actives
 
@@ -91,10 +92,10 @@
 | 2026-08-10 | Renforcer nettement le contraste des palettes jour et nuit | Demande explicite de l’utilisateur après validation de la matière | Le blanc du jour est plus lumineux, les veines diurnes plus noires et les veines nocturnes plus lisibles sur un fond presque noir | confirmée |
 | 2026-08-10 | Remplacer les nappes liquides par une base minérale aléatoire | L’utilisateur jugeait le rendu encore trop liquide | Le champ aléatoire reste la base du motif et reçoit ensuite des tourbillons contrôlés, des variations internes et une dérive ralentie | confirmée |
 | 2026-08-10 | Adapter en monochrome l’apparence du tutoriel Clip Studio 9287 | Référence explicite fournie par l’utilisateur | Cette piste a guidé le premier shader à tourbillons | remplacée le 2026-08-12 |
-| 2026-08-10 | Ajouter un menu intégré discret et repliable | Demande explicite de l’utilisateur | Intensité, déformation, contraste, grain, couleurs et seed sont réglables en direct et conservés localement | confirmée |
+| 2026-08-10 | Ajouter un menu intégré discret et repliable | Demande explicite de l’utilisateur | Intensité, déformation, contraste, grain, couleurs et seed sont réglables en direct et conservés localement | remplacée le 2026-08-25 |
 | 2026-08-10 | Séparer les distributions Windows et macOS | Nouvelle demande explicite de l’utilisateur | Le moteur WebGL reste commun, les hôtes et paquets sont rangés sous `platforms/` | confirmée |
 | 2026-08-10 | Livrer macOS en application `.app` paysage 1470 × 956 | L’utilisateur veut pouvoir l’ouvrir directement sur macOS | Hôte AppKit/WebKit universel, menu de barre système et ZIP de transport | confirmée |
-| 2026-08-10 | Ancrer le menu de réglages en haut à gauche et le rendre directement cliquable sur macOS | Demande explicite de l’utilisateur après essai du `.app` | Petit lanceur natif gauche au-dessus du Bureau, grande fenêtre toujours traversante aux clics | confirmée |
+| 2026-08-10 | Ancrer le menu de réglages en haut à gauche et le rendre directement cliquable sur macOS | Demande explicite de l’utilisateur après essai du `.app` | Petit lanceur natif gauche au-dessus du Bureau, grande fenêtre toujours traversante aux clics | remplacée le 2026-08-25 |
 | 2026-08-10 | Animer visiblement les grandes veines du marbre | Demande explicite de l’utilisateur | Courbure, domaine minéral et frontières animés lentement, vitesse exposée dans le menu et arrêt possible à zéro | confirmée |
 | 2026-08-10 | Synchroniser la déformation avec le déplacement des veines | Demande explicite de l’utilisateur | Une phase d’animation commune pilote dérive, torsion et respiration ; la vitesse zéro fige toutes les composantes | confirmée |
 | 2026-08-11 | Retirer entièrement l’affichage de l’heure | Demande explicite de l’utilisateur | Le cycle continue d’utiliser l’heure système, mais aucun widget ni réglage d’horloge n’est livré | confirmée |
@@ -102,9 +103,11 @@
 | 2026-08-12 | Renforcer les filons sans revenir à un effet graphique ou liquide | L’utilisateur jugeait les veines trop peu marquées | Des iso-contours anisotropes ouverts ajoutent halo, corps, âme et rares fractures ; le vertical reçoit une nappe plus présente, sans boucle topographique ni tracé blanc | confirmée |
 | 2026-08-12 | Ajouter une seconde couche d’inclusions minérales contrastées | L’utilisateur souhaite retrouver le détail des premiers traits contrastés sans dégrader le marbre validé | Trois familles de fragments courts, élargis et texturés réutilisent le champ géologique ; leurs gangues diffuses évitent l’effet de rayure, sans nouveau bruit coûteux | confirmée |
 | 2026-08-25 | Nommer l’application « Liquide-Wallpaper » | Demande explicite de l’utilisateur | Les intitulés visibles, bundles et archives de distribution utilisent ce nom | confirmée |
-| 2026-08-25 | Utiliser un symbole minéral monochrome dans la barre des menus macOS | Demande explicite de l’utilisateur | L’icône présente une veine maîtresse et deux fragments ; le mode template garantit sa lisibilité dans les deux apparences macOS | confirmée |
+| 2026-08-25 | Utiliser un symbole minéral monochrome dans la barre des menus macOS | Demande explicite de l’utilisateur | L’icône présente une veine maîtresse et deux fragments ; le mode template garantit sa lisibilité dans les deux apparences macOS | remplacée le 2026-08-25 |
 | 2026-08-25 | Livrer aussi macOS en image disque `.dmg` | Demande explicite de l’utilisateur | La construction macOS génère une image disque installable en plus du bundle et de l’archive ZIP | confirmée |
 | 2026-08-25 | Appliquer les éléments graphiques fournis aux distributions | Demande explicite de l’utilisateur | L’icône iOS 1024 px devient l’icône du bundle macOS et la charte graphique devient la vignette Windows/Lively | confirmée |
+| 2026-08-25 | Retirer tous les menus et renouveler automatiquement la seed toutes les deux heures | Demande explicite de l’utilisateur | Aucun contrôle n’est affiché ; une seed aléatoire locale est conservée pour la tranche de deux heures en cours | confirmée |
+| 2026-08-25 | Publier chaque modification validée du projet sur le dépôt distant | Demande explicite de l’utilisateur | Chaque tâche de modification se termine par un commit et un push, sauf instruction contraire ou blocage externe | confirmée |
 
 ## 10. Questions ouvertes
 

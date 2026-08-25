@@ -81,14 +81,6 @@
     "step": 1,
     "text": "Netteté des frontières"
   },
-  "randomSeed": {
-    "type": "slider",
-    "value": 9287,
-    "min": 1,
-    "max": 999999,
-    "step": 1,
-    "text": "Seed aléatoire"
-  },
   "cycleLabel": {
     "type": "label",
     "value": "Cycle lumineux"

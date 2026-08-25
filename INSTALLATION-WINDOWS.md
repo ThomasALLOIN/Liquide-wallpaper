@@ -13,18 +13,17 @@ Cette distribution cible Windows 10/11. Le fond d’écran fonctionne dans Livel
 
 Les deux moniteurs affichent des distributions minérales cohérentes, avec une composition dédiée au format vertical à droite. Ils suivent la même transition lumineuse.
 
-## Personnalisation du marbre
+## Personnalisation dans Lively
 
 Dans Lively, faire un clic droit sur le fond puis choisir **Personnaliser**. Les réglages permettent de modifier :
 
 - la courbure des strates, la vitesse commune au déplacement et à la déformation des veines, la densité, la largeur des nappes et l’amplitude de leur déformation ;
 - le grain et le contraste de la pierre ;
 - les quatre couleurs du marbre de jour et de nuit ;
-- la seed reproductible du motif ;
 - l’heure de retour du blanc, le début de l’assombrissement et l’heure du noir complet ;
 - la résolution du shader et la fréquence d’images.
 
-Un menu intégré plus compact est aussi accessible avec le petit bouton situé en haut à gauche du fond. Il est replié par défaut et permet d’ajuster rapidement la vitesse des veines, l’intensité, la déformation, le contraste, le grain, les couleurs et la seed. La valeur `0` fige le motif. Le bouton **Aléatoire** produit une nouvelle seed, enregistrée localement.
+Le fond ne présente aucun menu intégré. Sa seed est choisie automatiquement et renouvelée toutes les deux heures ; elle reste stable pendant la tranche active, y compris après une veille.
 
 ## Créer un paquet importable
 

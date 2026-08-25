@@ -9,20 +9,10 @@ const app = readFileSync(join(root, "src", "app.js"), "utf8");
 const styles = readFileSync(join(root, "src", "styles.css"), "utf8");
 const livelyProperties = JSON.parse(readFileSync(join(root, "LivelyProperties.json"), "utf8"));
 
-test("le menu repliable expose tous les réglages rapides demandés", () => {
-  assert.match(html, /id="settings-toggle"/);
-  assert.match(html, /id="settings-panel"[^>]*hidden/);
-  for (const setting of [
-    "flowSpeed", "intensity", "distortion", "contrast", "surfaceGrain", "randomSeed",
-    "dayBaseColor", "dayVeinColor", "nightBaseColor", "nightVeinColor",
-  ]) {
-    assert.match(html, new RegExp(`data-setting="${setting}"`));
-  }
-});
-
-test("le bouton et le panneau de réglages sont ancrés à gauche", () => {
-  assert.match(styles, /\.settings-toggle\s*\{[^}]*right:\s*auto;[^}]*left:\s*16px;/s);
-  assert.match(styles, /\.settings-panel\s*\{[^}]*right:\s*auto;[^}]*left:\s*16px;/s);
+test("le fond ne présente aucun menu ni réglage intégré", () => {
+  assert.doesNotMatch(html, /settings-toggle|settings-panel|data-setting=/);
+  assert.doesNotMatch(app, /WallpaperController|openSettings|closeSettings|syncMenuControls/);
+  assert.doesNotMatch(styles, /settings-toggle|settings-panel/);
 });
 
 test("aucune heure n’est affichée sur le fond d’écran", () => {
@@ -31,10 +21,13 @@ test("aucune heure n’est affichée sur le fond d’écran", () => {
   assert.equal(livelyProperties.showClock, undefined);
 });
 
-test("la seed pilote le shader et possède aussi une propriété Lively", () => {
+test("la seed pilote le shader et se renouvelle automatiquement toutes les deux heures", () => {
   assert.match(app, /uniform float u_seed/);
   assert.match(app, /normalizeSeed\(settings\.randomSeed\)/);
-  assert.equal(livelyProperties.randomSeed.value, 9287);
+  assert.match(app, /SEED_ROTATION_MS = 2 \* 60 \* 60 \* 1000/);
+  assert.match(app, /Math\.floor\(now \/ SEED_ROTATION_MS\)/);
+  assert.match(app, /window\.crypto\?\.getRandomValues/);
+  assert.equal(livelyProperties.randomSeed, undefined);
   assert.equal(livelyProperties.intensity.value, 32);
 });
 

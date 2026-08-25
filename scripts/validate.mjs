@@ -52,9 +52,8 @@ if (JSON.stringify(info) !== JSON.stringify(platformInfo) || JSON.stringify(prop
 if (properties.flowSpeed.type !== "slider" || properties.flowSpeed.value !== 16 ||
     properties.flowSpeed.min !== 0 || properties.flowSpeed.max !== 100 ||
     properties.flowSpeed.text !== "Vitesse des veines" ||
-    !properties.flowSpeed.help.includes("déplacement, la torsion et la déformation") ||
-    !indexHtml.includes('data-setting="flowSpeed"')) {
-  throw new Error("Le mouvement des veines doit être réglable de 0 à 100 dans Lively et dans le menu intégré.");
+    !properties.flowSpeed.help.includes("déplacement, la torsion et la déformation")) {
+  throw new Error("Le mouvement des veines doit être réglable de 0 à 100 dans Lively.");
 }
 if (properties.intensity.value !== 32 || properties.veinDensity.value !== 36 ||
     properties.veinWidth.value !== 38 || properties.distortion.value !== 46 ||
@@ -79,11 +78,10 @@ if (!macSource.includes("WallpaperHostConfig") || !macSource.includes("layout: '
 if (!macSource.includes("loadFileURL:indexURL") || macSource.includes("components.queryItems")) {
   throw new Error("WKWebView doit charger l’URL de fichier brute, sans paramètres de requête.");
 }
-if (!macSource.includes("NSPanel *launcherPanel") ||
-    !macSource.includes("return iconLevel + 1") ||
-    !macSource.includes("self.window.ignoresMouseEvents = YES") ||
-    !macSource.includes("self.launcherPanel.ignoresMouseEvents = NO")) {
-  throw new Error("macOS doit fournir un petit lanceur interactif sans bloquer les clics du Bureau.");
+if (!macSource.includes("self.window.ignoresMouseEvents = YES") ||
+    macSource.includes("NSStatusItem") || macSource.includes("NSPanel") ||
+    macSource.includes("wallpaperSettings")) {
+  throw new Error("macOS doit rester entièrement traversant aux clics et ne présenter aucun menu.");
 }
 if (!macPlist.includes("<string>APPL</string>") || !macPlist.includes("<string>Liquide-Wallpaper</string>")) {
   throw new Error("Info.plist ne décrit pas un bundle d’application macOS valide.");
