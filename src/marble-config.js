@@ -88,7 +88,7 @@
 
   function getVeinMotionRate(flowSpeed) {
     const numericSpeed = Number(flowSpeed);
-    return clamp(Number.isFinite(numericSpeed) ? numericSpeed : 0, 0, 100) / 100;
+    return clamp(Number.isFinite(numericSpeed) ? numericSpeed : 0, 0, 400) / 100;
   }
 
   const api = {

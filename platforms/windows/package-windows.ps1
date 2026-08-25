@@ -15,8 +15,8 @@ if ([string]::IsNullOrWhiteSpace($Destination)) {
     $Destination = Join-Path $DistDirectory "Liquide-Wallpaper-Lively.zip"
 }
 
-$SharedItems = @("index.html", "assets", "src")
-$PlatformItems = @("LivelyInfo.json", "LivelyProperties.json")
+$SharedItems = @("index.html", "assets", "src", "liquide-wallpaper-settings.json", "Lancer-Widget-Windows.cmd")
+$PlatformItems = @("LivelyInfo.json", "LivelyProperties.json", "Liquide-Wallpaper-Tray.ps1")
 
 foreach ($Item in $SharedItems) {
     if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot $Item))) {

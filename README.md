@@ -19,7 +19,7 @@ Le moteur visuel commun reste à la racine dans `index.html`, `src/` et `assets/
 
 Ouvrir **`Liquide-Wallpaper.app`**. Finder le présente comme un seul fichier, mais il s’agit techniquement d’un bundle d’application contenant l’exécutable natif et les ressources WebGL. Dans macOS, son nom affiché est « Liquide-Wallpaper ».
 
-Pour installer l’application, ouvrir `Liquide-Wallpaper-macOS.dmg`, puis glisser `Liquide-Wallpaper.app` dans le dossier **Applications**. L’archive `Liquide-Wallpaper-macOS.zip` reste disponible pour le transport. Le fond ne présente aucun bouton ni menu. Voir `INSTALLATION-macOS.md`.
+Pour installer l’application, ouvrir `Liquide-Wallpaper-macOS.dmg`, puis glisser `Liquide-Wallpaper.app` dans le dossier **Applications**. L’archive `Liquide-Wallpaper-macOS.zip` reste disponible pour le transport. L’icône de barre des menus ouvre uniquement une palette circulaire pour les quatre couleurs ; le fond reste sans bouton. Voir `INSTALLATION-macOS.md`.
 
 ## Windows
 

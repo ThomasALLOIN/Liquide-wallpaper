@@ -11,7 +11,7 @@ const livelyProperties = JSON.parse(readFileSync(join(root, "LivelyProperties.js
 
 test("le fond ne présente aucun menu ni réglage intégré", () => {
   assert.doesNotMatch(html, /settings-toggle|settings-panel|data-setting=/);
-  assert.doesNotMatch(app, /WallpaperController|openSettings|closeSettings|syncMenuControls/);
+  assert.doesNotMatch(app, /openSettings|closeSettings|syncMenuControls/);
   assert.doesNotMatch(styles, /settings-toggle|settings-panel/);
 });
 
@@ -38,6 +38,7 @@ test("les grandes veines possèdent un mouvement organique réglable", () => {
   assert.match(app, /getVeinMotionRate\(settings\.flowSpeed\)/);
   assert.match(app, /runtime\.motionTime \+= elapsedSeconds/);
   assert.equal(livelyProperties.flowSpeed.value, 16);
+  assert.equal(livelyProperties.flowSpeed.max, 400);
   assert.equal(livelyProperties.flowSpeed.text, "Vitesse des veines");
 });
 

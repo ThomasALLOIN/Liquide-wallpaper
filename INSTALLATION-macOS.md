@@ -7,7 +7,7 @@ La version macOS est une application native nommée `Liquide-Wallpaper.app`. Ell
 1. Ouvrir `Liquide-Wallpaper-macOS.dmg`.
 2. Glisser `Liquide-Wallpaper.app` dans le dossier **Applications**.
 3. Double-cliquer sur l’application.
-4. Le fond s’affiche sans bouton, menu ni icône de barre des menus.
+4. Le fond s’affiche sans bouton. L’icône Liquide-Wallpaper dans la barre des menus ouvre une palette circulaire réservée aux quatre couleurs du marbre.
 
 Le `.app` fourni est signé localement, mais pas notarisé par Apple. Lors de la première ouverture sur un autre Mac, faire un clic droit sur l’application puis **Ouvrir**. Si macOS la bloque encore, aller dans **Réglages Système → Confidentialité et sécurité** et choisir **Ouvrir quand même**.
 

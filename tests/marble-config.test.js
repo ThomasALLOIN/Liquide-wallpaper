@@ -41,9 +41,10 @@ test("les profils de performance ont des valeurs déterministes", () => {
   assert.equal(marble.getTargetFps(2), 30);
 });
 
-test("la vitesse des veines peut être réglée ou complètement arrêtée", () => {
+test("la vitesse des veines peut être accélérée jusqu’à 400 % ou complètement arrêtée", () => {
   assert.equal(marble.getVeinMotionRate(0), 0);
   assert.equal(marble.getVeinMotionRate(18), 0.18);
   assert.equal(marble.getVeinMotionRate(100), 1);
-  assert.equal(marble.getVeinMotionRate(150), 1);
+  assert.equal(marble.getVeinMotionRate(150), 1.5);
+  assert.equal(marble.getVeinMotionRate(500), 4);
 });

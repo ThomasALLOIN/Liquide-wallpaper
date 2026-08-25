@@ -12,7 +12,7 @@ Liquide-Wallpaper-macOS.zip
 Liquide-Wallpaper-macOS.dmg
 ```
 
-Double-cliquer sur le fichier `.app`. Le fond s’affiche sans bouton, menu ni icône dans la barre des menus. La seed est renouvelée automatiquement toutes les deux heures.
+Double-cliquer sur le fichier `.app`. Le fond reste sans bouton ; son icône de barre des menus ouvre une palette circulaire réservée aux quatre couleurs. La seed est renouvelée automatiquement toutes les deux heures.
 
 L’application est signée localement de façon ad hoc. Sur un autre Mac, macOS peut demander une première ouverture par clic droit → **Ouvrir**, ou via **Réglages Système → Confidentialité et sécurité → Ouvrir quand même**. Une diffusion publique sans avertissement nécessiterait une signature Developer ID et une notarisation Apple.
 
@@ -34,7 +34,7 @@ Ou double-cliquer sur `Construire-macOS.command`. Le petit hôte Objective-C/App
 - taille logique fixe de 1470 × 956, le facteur Retina étant géré par le canvas ;
 - fenêtre sans bordure placée juste sous les icônes du Bureau ;
 - présence dans tous les Espaces ;
-- aucun menu, bouton ou élément dans la barre de menus ;
+- aucun bouton sur le fond ; palette circulaire de couleurs uniquement depuis l’icône de barre des menus ;
 - seed aléatoire renouvelée toutes les deux heures et conservée pendant la tranche en cours ;
 - aucune connexion réseau.
 

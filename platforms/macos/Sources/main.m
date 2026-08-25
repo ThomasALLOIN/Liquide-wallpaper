@@ -6,6 +6,15 @@
 static const CGFloat WallpaperWidth = 1470.0;
 static const CGFloat WallpaperHeight = 956.0;
 
+static NSColor *ColorFromHex(NSString *hex) {
+    unsigned int value = 0;
+    [[NSScanner scannerWithString:[hex stringByReplacingOccurrencesOfString:@"#" withString:@""]] scanHexInt:&value];
+    return [NSColor colorWithSRGBRed:((value >> 16) & 0xFF) / 255.0
+                               green:((value >> 8) & 0xFF) / 255.0
+                                blue:(value & 0xFF) / 255.0
+                               alpha:1.0];
+}
+
 @interface WallpaperWindow : NSWindow
 @end
 
@@ -14,9 +23,58 @@ static const CGFloat WallpaperHeight = 956.0;
 - (BOOL)canBecomeMainWindow { return YES; }
 @end
 
+@interface ColorPaletteController : NSViewController
+@property(nonatomic, weak) WKWebView *webView;
+@property(nonatomic, strong) NSArray<NSColorWell *> *wells;
+@end
+
+@implementation ColorPaletteController
+
+- (void)loadView {
+    NSView *view = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 196, 196)];
+    view.wantsLayer = YES;
+    view.layer.backgroundColor = [NSColor colorWithCalibratedWhite:0.06 alpha:0.98].CGColor;
+    view.layer.cornerRadius = 98.0;
+
+    NSArray<NSString *> *hexColors = @[@"#e7e5df", @"#181a1d", @"#08090b", @"#7c7d80"];
+    NSArray<NSValue *> *positions = @[
+        [NSValue valueWithPoint:NSMakePoint(78, 136)], [NSValue valueWithPoint:NSMakePoint(136, 78)],
+        [NSValue valueWithPoint:NSMakePoint(78, 20)], [NSValue valueWithPoint:NSMakePoint(20, 78)]
+    ];
+    NSMutableArray<NSColorWell *> *wells = [[NSMutableArray alloc] init];
+    for (NSInteger index = 0; index < hexColors.count; index++) {
+        NSColorWell *well = [[NSColorWell alloc] initWithFrame:NSMakeRect(positions[index].pointValue.x, positions[index].pointValue.y, 40, 40)];
+        well.tag = index;
+        well.color = ColorFromHex(hexColors[index]);
+        well.target = self;
+        well.action = @selector(colorChanged:);
+        [view addSubview:well];
+        [wells addObject:well];
+    }
+    self.wells = wells;
+    self.view = view;
+}
+
+- (void)colorChanged:(NSColorWell *)sender {
+    NSArray<NSString *> *names = @[@"dayBaseColor", @"dayVeinColor", @"nightBaseColor", @"nightVeinColor"];
+    NSMutableArray<NSString *> *values = [[NSMutableArray alloc] init];
+    for (NSColorWell *well in self.wells) {
+        NSColor *color = [well.color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]];
+        [values addObject:[NSString stringWithFormat:@"#%02lX%02lX%02lX", (long)lrint(color.redComponent * 255), (long)lrint(color.greenComponent * 255), (long)lrint(color.blueComponent * 255)]];
+    }
+    NSString *script = [NSString stringWithFormat:
+        @"window.WallpaperController?.setAppearance({%@:'%@',%@:'%@',%@:'%@',%@:'%@'})",
+        names[0], values[0], names[1], values[1], names[2], values[2], names[3], values[3]];
+    [self.webView evaluateJavaScript:script completionHandler:nil];
+}
+
+@end
+
 @interface AppDelegate : NSObject <NSApplicationDelegate, WKNavigationDelegate>
 @property(nonatomic, strong) WallpaperWindow *window;
 @property(nonatomic, strong) WKWebView *webView;
+@property(nonatomic, strong) NSStatusItem *statusItem;
+@property(nonatomic, strong) NSPopover *colorPopover;
 @end
 
 @implementation AppDelegate
@@ -24,6 +82,7 @@ static const CGFloat WallpaperHeight = 956.0;
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
     [NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
     [self createWindow];
+    [self createColorStatusItem];
     [self loadWallpaper];
 
     [[NSNotificationCenter defaultCenter]
@@ -31,6 +90,32 @@ static const CGFloat WallpaperHeight = 956.0;
            selector:@selector(screenConfigurationChanged:)
                name:NSApplicationDidChangeScreenParametersNotification
              object:nil];
+}
+
+- (void)createColorStatusItem {
+    self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
+    NSStatusBarButton *button = self.statusItem.button;
+    button.image = [NSImage imageWithSystemSymbolName:@"circle.lefthalf.filled" accessibilityDescription:@"Couleurs Liquide-Wallpaper"];
+    button.image.template = YES;
+    button.target = self;
+    button.action = @selector(toggleColorPalette:);
+    button.toolTip = @"Couleurs Liquide-Wallpaper";
+
+    ColorPaletteController *controller = [[ColorPaletteController alloc] init];
+    controller.webView = self.webView;
+    self.colorPopover = [[NSPopover alloc] init];
+    self.colorPopover.behavior = NSPopoverBehaviorTransient;
+    self.colorPopover.contentViewController = controller;
+}
+
+- (void)toggleColorPalette:(id)sender {
+    if (self.colorPopover.shown) {
+        [self.colorPopover close];
+    } else {
+        [self.colorPopover showRelativeToRect:self.statusItem.button.bounds
+                                       ofView:self.statusItem.button
+                                preferredEdge:NSRectEdgeMinY];
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {

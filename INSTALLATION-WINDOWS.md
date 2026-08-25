@@ -25,6 +25,10 @@ Dans Lively, faire un clic droit sur le fond puis choisir **Personnaliser**. Les
 
 Le fond ne présente aucun menu intégré. Sa seed est choisie automatiquement et renouvelée toutes les deux heures ; elle reste stable pendant la tranche active, y compris après une veille.
 
+## Widget de zone de notification
+
+Après avoir importé le ZIP dans Lively, double-cliquer sur `Lancer-Widget-Windows.cmd` dans le dossier du fond. Une petite icône apparaît dans les icônes cachées de Windows. Un clic ouvre une fenêtre sobre permettant de choisir les quatre couleurs, la vitesse jusqu’à **400 %** et la déformation. Les réglages sont appliqués localement au fond Lively en quelques secondes.
+
 ## Créer un paquet importable
 
 Double-cliquer sur `Construire-Lively-Windows.cmd`. Le fichier suivant sera créé :

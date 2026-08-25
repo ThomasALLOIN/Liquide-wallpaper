@@ -28,10 +28,10 @@
     "type": "slider",
     "value": 16,
     "min": 0,
-    "max": 100,
+    "max": 400,
     "step": 1,
     "text": "Vitesse des veines",
-    "help": "Pilote ensemble le déplacement, la torsion et la déformation. Zéro fige toute l’animation."
+    "help": "Pilote ensemble le déplacement, la torsion et la déformation. Zéro fige toute l’animation ; jusqu’à 400 % pour un mouvement rapide."
   },
   "intensity": {
     "type": "slider",

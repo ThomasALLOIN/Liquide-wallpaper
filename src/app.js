@@ -11,6 +11,7 @@
   const hostConfig = window.WallpaperHostConfig || {};
   const SEED_ROTATION_MS = 2 * 60 * 60 * 1000;
   const SEED_STORAGE_KEY = "liquide-wallpaper-rotating-seed-v1";
+  const WINDOWS_SETTINGS_URL = "liquide-wallpaper-settings.json";
   document.documentElement.dataset.platform = query.get("platform") || hostConfig.platform || "web";
 
   const settings = {
@@ -50,6 +51,7 @@
     previewSpeed: Number(query.get("speed") || 0),
     fixedSeed: query.has("seed"),
     seedPeriod: null,
+    lastExternalSettingsPoll: 0,
   };
 
   function normalizeSeed(value) {
@@ -83,6 +85,39 @@
   }
 
   if (runtime.fixedSeed) settings.randomSeed = normalizeSeed(query.get("seed"));
+
+  function applyAppearance(values) {
+    if (!values || typeof values !== "object") return false;
+    const colors = ["dayBaseColor", "dayVeinColor", "nightBaseColor", "nightVeinColor"];
+    let changed = false;
+    for (const name of colors) {
+      if (typeof values[name] === "string" && /^#[0-9a-fA-F]{6}$/.test(values[name])) {
+        settings[name] = values[name];
+        changed = true;
+      }
+    }
+    if (Number.isFinite(Number(values.flowSpeed))) {
+      settings.flowSpeed = Math.min(400, Math.max(0, Number(values.flowSpeed)));
+      changed = true;
+    }
+    if (Number.isFinite(Number(values.distortion))) {
+      settings.distortion = Math.min(100, Math.max(0, Number(values.distortion)));
+      changed = true;
+    }
+    return changed;
+  }
+
+  async function pollWindowsAppearance() {
+    const now = Date.now();
+    if (now - runtime.lastExternalSettingsPoll < 3000) return;
+    runtime.lastExternalSettingsPoll = now;
+    try {
+      const response = await fetch(`${WINDOWS_SETTINGS_URL}?t=${now}`, { cache: "no-store" });
+      if (response.ok && applyAppearance(await response.json())) render(performance.now());
+    } catch {
+      // La configuration locale n’existe que dans le paquet Windows/Lively.
+    }
+  }
 
   const vertexShaderSource = `#version 300 es
     in vec2 a_position;
@@ -740,6 +775,7 @@
 
   function render(nowMs) {
     updateRotatingSeed();
+    pollWindowsAppearance();
     const hour = getHour(nowMs);
     const lightLevel = marble.getLightLevel(hour, settings);
     const screenLayout = layout.resolve(runtime.width, runtime.height, {
@@ -803,6 +839,12 @@
     else if (colorSettings.has(name)) settings[name] = String(value);
     if (name === "quality") resize();
     render(performance.now());
+  };
+
+  window.WallpaperController = {
+    setAppearance(values) {
+      if (applyAppearance(values)) render(performance.now());
+    },
   };
 
   window.livelyWallpaperPlaybackChanged = function livelyWallpaperPlaybackChanged(data) {

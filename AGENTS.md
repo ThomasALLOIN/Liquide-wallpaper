@@ -18,7 +18,7 @@
 
 ## 3. Périmètre
 
-- Inclus dans le socle : shader WebGL de marbre graphite stratifié, heure système, palettes jour/nuit, seed aléatoire renouvelée toutes les deux heures, dispositions Windows Lively par écran ou étendue, hôte macOS AppKit/WebKit paysage 1470 × 956, empaquetage séparé et tests sans dépendance d’exécution.
+- Inclus dans le socle : shader WebGL de marbre graphite stratifié, heure système, palettes jour/nuit, seed aléatoire renouvelée toutes les deux heures, dispositions Windows Lively par écran ou étendue, compagnon de zone de notification Windows, hôte macOS AppKit/WebKit paysage 1470 × 956 avec palette de couleurs, empaquetage séparé et tests sans dépendance d’exécution.
 - Hors périmètre actuel : Linux, déploiement comme site web public, météo en ligne, audio, rendu 3D, installateur Windows `.exe` autonome, notarisation Developer ID et publication dans une galerie ou un App Store.
 - Livrables : moteur web commun, paquet Lively Windows, application `.app` macOS universelle, archives de transport, documentation et contrôles de validation.
 
@@ -62,12 +62,12 @@
 - Les frontières doivent rester irrégulières et localement lisibles, avec un cœur parfois net entouré d’une transition minérale douce ; éviter aussi bien les cassures artificielles que les contours graphiques continus.
 - La couche de détail contrastée doit rester subordonnée aux grandes nappes : fragments courts et ouverts, cœur d’environ 5 à 8 px et gangue poudreuse plus large, extrémités fondues, aucune bifurcation anguleuse, boucle topographique, griffure blanche ou ligne traversant l’écran.
 - La matière doit éviter l’effet zébré régulier : privilégier de grandes zones aléatoires, des nappes remplies plutôt que des boucles de niveau fermées, des stries anisotropes et des variations minérales internes.
-- Aucun menu, bouton ou lanceur ne doit être visible sur le fond. L’hôte macOS reste intégralement traversant aux clics et ne crée pas d’élément de barre des menus.
+- Aucun menu, bouton ou lanceur ne doit être visible sur le fond. L’hôte macOS reste intégralement traversant aux clics ; son unique élément de barre des menus ouvre une palette circulaire réservée aux quatre couleurs.
 - Une seed aléatoire est générée à chaque tranche de deux heures ; elle est conservée localement pendant la tranche en cours afin de résister à une reprise après veille, sans réseau.
 - Le mode étendu doit accepter une largeur relative et un alignement réglables pour les écrans de résolutions différentes.
 - Le rendu doit se suspendre lorsque la page ou Lively est en pause.
 - Aucun secret, suivi utilisateur ou appel réseau dans le socle.
-- La distribution macOS doit forcer `layout=landscape`, rester fixée à 1470 × 956 points et fonctionner sans menu ni élément visible hors du fond.
+- La distribution macOS doit forcer `layout=landscape`, rester fixée à 1470 × 956 points et proposer uniquement une palette circulaire de couleurs depuis son icône de barre des menus. Sous Windows, le compagnon de zone de notification ouvre une fenêtre minimale pour les couleurs, la vitesse (jusqu’à 400 %) et la déformation.
 - Acceptation finale : test Windows avec Lively sur les deux écrans physiques et test macOS du `.app` sur l’écran 1470 × 956 par l’utilisateur.
 
 ## 8. Protocole de décision
@@ -107,6 +107,7 @@
 | 2026-08-25 | Livrer aussi macOS en image disque `.dmg` | Demande explicite de l’utilisateur | La construction macOS génère une image disque installable en plus du bundle et de l’archive ZIP | confirmée |
 | 2026-08-25 | Appliquer les éléments graphiques fournis aux distributions | Demande explicite de l’utilisateur | L’icône iOS 1024 px devient l’icône du bundle macOS et la charte graphique devient la vignette Windows/Lively | confirmée |
 | 2026-08-25 | Retirer tous les menus et renouveler automatiquement la seed toutes les deux heures | Demande explicite de l’utilisateur | Aucun contrôle n’est affiché ; une seed aléatoire locale est conservée pour la tranche de deux heures en cours | confirmée |
+| 2026-08-25 | Ajouter des réglages légers par plateforme | Demande explicite de l’utilisateur | macOS expose uniquement les couleurs dans une palette circulaire de barre des menus ; Windows utilise une icône de zone de notification pour les couleurs, la vitesse jusqu’à 400 % et la déformation | confirmée |
 | 2026-08-25 | Publier chaque modification validée du projet sur le dépôt distant | Demande explicite de l’utilisateur | Chaque tâche de modification se termine par un commit et un push, sauf instruction contraire ou blocage externe | confirmée |
 
 ## 10. Questions ouvertes

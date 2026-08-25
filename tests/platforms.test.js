@@ -35,9 +35,11 @@ test("les métadonnées de compatibilité correspondent au dossier Windows", () 
   assert.deepEqual(rootProperties, windowsProperties);
 });
 
-test("l’hôte macOS ne présente aucun menu ni lanceur", () => {
+test("l’hôte macOS propose uniquement une palette de couleurs depuis la barre des menus", () => {
   const app = readFileSync(join(root, "src", "app.js"), "utf8");
-  assert.doesNotMatch(app, /WallpaperController|openSettings|closeSettings/);
-  assert.doesNotMatch(macSource, /NSStatusItem|NSPanel|wallpaperSettings|openSettings/);
+  assert.match(app, /WallpaperController/);
+  assert.match(app, /setAppearance/);
+  assert.match(macSource, /NSStatusItem|NSPopover|ColorPaletteController/);
+  assert.doesNotMatch(macSource, /NSMenu|NSPanel|openSettings/);
   assert.match(macSource, /self\.window\.ignoresMouseEvents = YES/);
 });

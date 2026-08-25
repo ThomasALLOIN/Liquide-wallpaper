@@ -17,6 +17,7 @@ const requiredFiles = [
   "assets/thumbnail.png",
   "assets/windows-brand.png",
   "icon/Icon-iOS-Default-1024x1024@1x.png",
+  "liquide-wallpaper-settings.json",
   "src/app.js",
   "src/marble-config.js",
   "src/layout.js",
@@ -50,10 +51,10 @@ if (JSON.stringify(info) !== JSON.stringify(platformInfo) || JSON.stringify(prop
   throw new Error("Les métadonnées Lively de compatibilité ne correspondent pas à la plateforme Windows.");
 }
 if (properties.flowSpeed.type !== "slider" || properties.flowSpeed.value !== 16 ||
-    properties.flowSpeed.min !== 0 || properties.flowSpeed.max !== 100 ||
+    properties.flowSpeed.min !== 0 || properties.flowSpeed.max !== 400 ||
     properties.flowSpeed.text !== "Vitesse des veines" ||
     !properties.flowSpeed.help.includes("déplacement, la torsion et la déformation")) {
-  throw new Error("Le mouvement des veines doit être réglable de 0 à 100 dans Lively.");
+  throw new Error("Le mouvement des veines doit être réglable de 0 à 400 dans Lively.");
 }
 if (properties.intensity.value !== 32 || properties.veinDensity.value !== 36 ||
     properties.veinWidth.value !== 38 || properties.distortion.value !== 46 ||
@@ -79,9 +80,9 @@ if (!macSource.includes("loadFileURL:indexURL") || macSource.includes("component
   throw new Error("WKWebView doit charger l’URL de fichier brute, sans paramètres de requête.");
 }
 if (!macSource.includes("self.window.ignoresMouseEvents = YES") ||
-    macSource.includes("NSStatusItem") || macSource.includes("NSPanel") ||
-    macSource.includes("wallpaperSettings")) {
-  throw new Error("macOS doit rester entièrement traversant aux clics et ne présenter aucun menu.");
+    !macSource.includes("NSStatusItem") || !macSource.includes("NSPopover") ||
+    !macSource.includes("ColorPaletteController") || macSource.includes("NSMenu")) {
+  throw new Error("macOS doit proposer uniquement une palette de couleurs depuis son icône de barre des menus.");
 }
 if (!macPlist.includes("<string>APPL</string>") || !macPlist.includes("<string>Liquide-Wallpaper</string>")) {
   throw new Error("Info.plist ne décrit pas un bundle d’application macOS valide.");
